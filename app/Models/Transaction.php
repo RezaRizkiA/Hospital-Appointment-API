@@ -22,7 +22,7 @@ class Transaction extends Model
     ];
 
     protected $casts = [
-        'started_at' => 'data',
+        'started_at' => 'date',
         'time_at' => 'datetime:H:i',
     ];
 }
