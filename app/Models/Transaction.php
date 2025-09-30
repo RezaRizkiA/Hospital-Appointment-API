@@ -8,7 +8,7 @@ use Illuminate\Database\Eloquent\SoftDeletes;
 class Transaction extends Model
 {
     use SoftDeletes;
-    
+
     protected $fillable = [
         'user_id',
         'doctor_id',
@@ -19,5 +19,10 @@ class Transaction extends Model
         'tax_total',
         'grand_total',
         'proof_payment',
+    ];
+
+    protected $casts = [
+        'started_at' => 'data',
+        'time_at' => 'datetime:H:i',
     ];
 }
