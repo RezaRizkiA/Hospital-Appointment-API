@@ -13,7 +13,11 @@ return new class extends Migration
     {
         Schema::create('hospital_specialists', function (Blueprint $table) {
             $table->id();
+            $table->foreignId('hospital_id')->constrained()->cascadeOnDelete();
+            $table->foreignId('specialist_id')->constrained()->cascadeOnDelete();
             $table->timestamps();
+            $table->softDeletes();
+            $table->unique(['hospital_id', 'specialist_id']);
         });
     }
 
