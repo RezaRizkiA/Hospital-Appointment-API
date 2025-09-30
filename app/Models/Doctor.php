@@ -29,5 +29,8 @@ class Doctor extends Model
         return $this->belongsTo(Hospital::class, 'hospital_id');
     }
 
-    
+    public function transactions()
+    {
+        return $this->hasMany(Transaction::class, 'doctor_id');
+    }
 }
