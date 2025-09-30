@@ -2,8 +2,10 @@
 
 namespace App\Models;
 
+use Illuminate\Database\Eloquent\Casts\Attribute;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\SoftDeletes;
+use Illuminate\Support\Facades\Storage;
 
 class Transaction extends Model
 {
@@ -34,5 +36,12 @@ class Transaction extends Model
     public function doctor()
     {
         return $this->belongsTo(Doctor::class, 'doctor_id');
+    }
+
+    protected function proofPayment(): Attribute
+    {
+        return Attribute::make(
+            get: fn($value) => $value ? url(Storage::url($value)) : null,
+        );
     }
 }
