@@ -25,4 +25,14 @@ class Transaction extends Model
         'started_at' => 'date',
         'time_at' => 'datetime:H:i',
     ];
+
+    public function user()
+    {
+        return $this->belongsTo(User::class, 'user_id');
+    }
+
+    public function doctor()
+    {
+        return $this->belongsTo(Doctor::class, 'doctor_id');
+    }
 }
