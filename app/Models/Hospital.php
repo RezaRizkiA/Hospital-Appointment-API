@@ -2,10 +2,12 @@
 
 namespace App\Models;
 
+use Illuminate\Database\Eloquent\Casts\Attribute;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Relations\BelongsToMany;
 use Illuminate\Database\Eloquent\Relations\HasMany;
 use Illuminate\Database\Eloquent\SoftDeletes;
+use Illuminate\Support\Facades\Storage;
 
 class Hospital extends Model
 {
@@ -29,5 +31,12 @@ class Hospital extends Model
     public function specialists(): BelongsToMany
     {
         return $this->belongsToMany(Specialist::class);
+    }
+
+    protected function photo(): Attribute
+    {
+        return Attribute::make(
+            get: fn($value) => $value ? url(Storage::url($value)) : null
+        );
     }
 }
