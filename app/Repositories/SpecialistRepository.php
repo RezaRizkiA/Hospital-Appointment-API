@@ -33,4 +33,11 @@ class SpecialistRepository
     {
         return Specialist::create($data);
     }
+
+    public function update(int $id, array $data)
+    {
+        $specialist = Specialist::findOrFail($id);
+        $specialist->update($data);
+        return $specialist;
+    }
 }
