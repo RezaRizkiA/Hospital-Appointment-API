@@ -7,7 +7,7 @@ use App\Models\Specialist;
 class SpecialistRepository
 {
 
-    public function getAllSpecialists(array $fields)
+    public function getAll(array $fields)
     {
         return Specialist::select($fields)->latest()->with(['hospitals', 'doctors'])->paginate(10);
     }
@@ -27,5 +27,10 @@ class SpecialistRepository
                 }
             ])
             ->findOrFail($id);
+    }
+
+    public function create(array $data)
+    {
+        return Specialist::create($data);
     }
 }
