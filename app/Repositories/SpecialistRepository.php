@@ -12,7 +12,6 @@ class SpecialistRepository
         return Specialist::select($fields)->latest()->with(['hospitals', 'doctors'])->paginate(10);
     }
 
-
     public function getById(int $id, array $fields)
     {
         return Specialist::select($fields)
