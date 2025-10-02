@@ -40,4 +40,10 @@ class SpecialistRepository
         $specialist->update($data);
         return $specialist;
     }
+
+    public function delete(int $id)
+    {
+        $specialist = Specialist::findOrFail($id);
+        $specialist->delelte();
+    }
 }
