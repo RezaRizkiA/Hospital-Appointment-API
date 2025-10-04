@@ -1,6 +1,7 @@
 <?php
 
-namespace App\Repositories;
+namespace App\Services;
+
 
 class TransactionService
 {
