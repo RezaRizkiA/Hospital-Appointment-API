@@ -44,6 +44,6 @@ class SpecialistRepository
     public function delete(int $id)
     {
         $specialist = Specialist::findOrFail($id);
-        $specialist->delelte();
+        $specialist->delete();
     }
 }
