@@ -27,11 +27,23 @@ class SpecialistService
 
     public function create(array $data)
     {
+        if (isset($data['photo']) && $data['photo'] instanceof UploadedFile) {
+            $data['photo'] = $this->uploadPhoto($data['photo']);
+        }
         return $this->specialistRepository->create($data);
     }
 
     public function update(int $id, array $data)
     {
+        $fields = ['*'];
+        $specialist = $this->specialistRepository->getById($id, $fields);
+
+        if (isset($data['photo']) && $data['photo'] instanceof UploadedFile) {
+            if (!empty($specialist->photo)) {
+                $this->deletePhoto($specialist->photo);
+            }
+            $data['photo'] = $this->uploadPhoto($data['photo']);
+        }
         return $this->specialistRepository->update($id, $data);
     }
 
