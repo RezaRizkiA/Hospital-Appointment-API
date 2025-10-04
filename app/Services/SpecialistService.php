@@ -25,19 +25,6 @@ class SpecialistService
         return $this->specialistRepository->getById($id, $fields);
     }
 
-    private function uploadPhoto(UploadedFile $photo): string
-    {
-        return $photo->store('specialists', 'public');
-    }
-
-    private function deletePhoto(string $photoPath)
-    {
-        $relativePath = 'specialists/' . basename($photoPath);
-        if (Storage::disk('public')->exists($relativePath)) {
-            Storage::disk('public')->delete($relativePath);
-        }
-    }
-
     public function create(array $data)
     {
         return $this->specialistRepository->create($data);
@@ -51,5 +38,18 @@ class SpecialistService
     public function delete(int $id)
     {
         return $this->specialistRepository->delete($id);
+    }
+
+    private function uploadPhoto(UploadedFile $photo): string
+    {
+        return $photo->store('specialists', 'public');
+    }
+
+    private function deletePhoto(string $photoPath)
+    {
+        $relativePath = 'specialists/' . basename($photoPath);
+        if (Storage::disk('public')->exists($relativePath)) {
+            Storage::disk('public')->delete($relativePath);
+        }
     }
 }
