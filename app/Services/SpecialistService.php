@@ -1,6 +1,6 @@
 <?php
 
-namespace App\Repositories;
+namespace App\Services;
 
 use App\Repositories\SpecialistRepository;
 use Illuminate\Http\UploadedFile;
@@ -8,7 +8,7 @@ use Illuminate\Support\Facades\Storage;
 
 class SpecialistService
 {
-    private $specialistRepository;
+    private SpecialistRepository $specialistRepository;
 
     public function __construct(SpecialistRepository $specialistRepository)
     {
@@ -49,6 +49,12 @@ class SpecialistService
 
     public function delete(int $id)
     {
+        $fields = ['*'];
+        $specialist = $this->specialistRepository->getById($id, $fields);
+
+        if (!empty($specialist->photo)) {
+            $this->deletePhoto($specialist->photo);
+        }
         return $this->specialistRepository->delete($id);
     }
 
