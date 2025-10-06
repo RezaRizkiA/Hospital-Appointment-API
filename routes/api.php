@@ -5,7 +5,6 @@ use App\Http\Controllers\HospitalController;
 use App\Http\Controllers\HospitalSpecialistController;
 use App\Http\Controllers\SpecialistController;
 use App\Http\Controllers\TransactionController;
-use App\Models\HospitalSpecialist;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Route;
 
