@@ -23,7 +23,7 @@ class SpecialistController extends Controller
         return response()->json(SpecialistResource::collection($specialists));
     }
 
-    public function show($id)
+    public function show(int $id)
     {
         try {
             $fields = ['*'];
@@ -41,7 +41,7 @@ class SpecialistController extends Controller
             'about' => 'nullable|string',
             'price' => 'required|numeric',
             'photo' => 'nullable|image|max:2048',
-        ]);
+        ]); 
         $specialist = $this->specialistService->create($data);
         return response()->json(new SpecialistResource($specialist), 201);
     }
