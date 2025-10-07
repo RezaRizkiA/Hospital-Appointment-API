@@ -28,4 +28,16 @@ class SpecialistController extends Controller
         $specialist = $this->specialistService->getById($id, $fields);
         return response()->json(new SpecialistResource($specialist));
     }
+
+    public function store(Request $request)
+    {
+        $data = $request->validate([
+            'name' => 'required|string|max:255',
+            'about' => 'nullable|string',
+            'price' => 'required|numeric',
+            'photo' => 'nullable|image|max:2048',
+        ]);
+        $specialist = $this->specialistService->create($data);
+        return response()->json(new SpecialistResource($specialist), 201);
+    }
 }
