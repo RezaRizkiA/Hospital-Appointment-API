@@ -32,4 +32,22 @@ class HospitalRepository
             ])
             ->findOrFail($id);
     }
+
+    public function create(array $data)
+    {
+        return Hospital::create($data);
+    }
+
+    public function update(int $id, array $data)
+    {
+        $hospital = Hospital::findOrFail($id);
+        $hospital->update($data);
+        return $hospital;
+    }
+
+    public function delete(int $id)
+    {
+        $hospital = Hospital::findOrFail($id);
+        $hospital->delete();
+    }
 }
