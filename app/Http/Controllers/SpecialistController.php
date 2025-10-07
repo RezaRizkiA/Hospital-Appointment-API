@@ -17,8 +17,15 @@ class SpecialistController extends Controller
 
     public function index()
     {
-        $fields = ['id', 'name', 'about', 'price'];
+        $fields = ['id', 'name', 'about', 'price', 'photo'];
         $specialists = $this->specialistService->getAll($fields);
         return response()->json(SpecialistResource::collection($specialists));
+    }
+
+    public function show($id)
+    {
+        $fields = ['id', 'name', 'about', 'price', 'photo'];
+        $specialist = $this->specialistService->getById($id, $fields);
+        return response()->json(new SpecialistResource($specialist));
     }
 }
