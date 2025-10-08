@@ -7,6 +7,17 @@ use App\Models\Specialist;
 class SpecialistRepository
 {
 
+    /**
+     * Mengambil semua data spesialis dengan paginasi.
+     * 
+     * Fungsi ini secara efisien mengambil daftar spesialis yang diurutkan 
+     * berdasarkan data terbaru. Eager loading diterapkan pada relasi
+     * 'hospitals' dan 'doctors' untuk mencegah masalah N+1 query.
+     * 
+     * @param array $fields. Array berisi kolom yang ingin ditampilkan. Contoh: ['id', 'name', 'price', 'photo'].
+     * @return \Illuminate\Contracts\Pagination\LengthAwarePaginator. Objek paginator yang berisi koleksi spesialis
+     * 
+     */
     public function getAll(array $fields)
     {
         return Specialist::select($fields)->latest()->with(['hospitals', 'doctors'])->paginate(10);
