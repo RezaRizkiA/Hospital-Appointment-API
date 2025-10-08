@@ -22,3 +22,5 @@ Route::delete('hospitals/{hospital}/specialist/{specialist}', [HospitalSpecialis
 Route::apiResource('transactions', TransactionController::class);
 Route::patch('transactions/{transaction}/status', [TransactionController::class, 'updateStatus']);
     
+Route::get('/doctors-filter', [DoctorController::class, 'filterBySpecialistAndHospital']);
+Route::get('/doctors/{doctorId}/available-slots', [DoctorController::class, 'availableSlots']);
