@@ -60,7 +60,7 @@ class SpecialistService
 
     private function uploadPhoto(UploadedFile $photo): string
     {
-        return $photo->store('specialists', 'public');
+        return $photo->store('specialists', 'public'); // domainkita.com/storage/specialists/namafoto.jpg
     }
 
     private function deletePhoto(string $photoPath)
