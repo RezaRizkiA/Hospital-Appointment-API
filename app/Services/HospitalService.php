@@ -12,4 +12,14 @@ class HospitalService {
     {
         $this->hospitalRepository = $hospitalRepository;
     }
+
+    public function getAll(array $fields)
+    {
+        return $this->hospitalRepository->getAll($fields);
+    }
+
+    public function getById(int $id, array $fields)
+    {
+        return $this->hospitalRepository->getById($id, $fields);
+    }
 }
