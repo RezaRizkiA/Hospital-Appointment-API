@@ -23,6 +23,16 @@ class SpecialistRepository
         return Specialist::select($fields)->latest()->with(['hospitals', 'doctors'])->paginate(10);
     }
 
+    /**
+     * Mengambil data spesialis berdasarkan ID.
+     * 
+     * Fungsi ini mengambil data spesialis berdasarkan ID yang diberikan.
+     * Eager loading diterapkan pada relasi 'hospitals' dan 'doctors' untuk mencegah masalah N+1 query.
+     * @param int $id. ID spesialis yang ingin diambil.
+     * @param array $fields. Array berisi kolom yang ingin ditampilkan. Contoh: ['*'] untuk semua kolom.
+     * @return Specialist. Objek spesialis yang ditemukan.
+     * @throws \Illuminate\Database\Eloquent\ModelNotFoundException Jika spesialis dengan ID yang diberikan tidak ditemukan.
+     */
     public function getById(int $id, array $fields)
     {
         return Specialist::select($fields)
