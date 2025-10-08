@@ -28,6 +28,8 @@ class SpecialistRepository
      * 
      * Fungsi ini mengambil data spesialis berdasarkan ID yang diberikan.
      * Eager loading diterapkan pada relasi 'hospitals' dan 'doctors' untuk mencegah masalah N+1 query.
+     * relasi 'hospitals' juga menghitung jumlah dokter yang terkait dengan spesialis tersebut.
+     * 
      * @param int $id. ID spesialis yang ingin diambil.
      * @param array $fields. Array berisi kolom yang ingin ditampilkan. Contoh: ['*'] untuk semua kolom.
      * @return Specialist. Objek spesialis yang ditemukan.
