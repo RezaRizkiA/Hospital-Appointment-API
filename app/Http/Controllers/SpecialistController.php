@@ -9,6 +9,8 @@ use App\Services\SpecialistService;
 use Illuminate\Database\Eloquent\ModelNotFoundException;
 use Illuminate\Http\Request;
 
+use function Pest\Laravel\json;
+
 class SpecialistController extends Controller
 {
     private $specialistService;
@@ -40,5 +42,29 @@ class SpecialistController extends Controller
     {
         $specialist = $this->specialistService->create($request->validated());
         return response()->json(new SpecialistResource($specialist), 201);
+    }
+
+    public function update(SpecialistRequest $request, int $id)
+    {
+        try {
+            $specialist = $this->specialistService->update($id, $request->validated());
+            return response()->json(new SpecialistResource($specialist));
+        } catch (ModelNotFoundException $e) {
+            return response()->json(['message' => 'Specialist not found'], 404);
+        }
+    }
+
+    public function destroy(int $id)
+    {
+        try {
+            $this->specialistService->delete($id);
+            return response()->json([
+                'message' => 'Specialist deleted successfully',
+            ]);
+        } catch (ModelNotFoundException $e) {
+            return response()->json([
+                'message' => 'Specialist not found'
+            ], 404);
+        }
     }
 }
