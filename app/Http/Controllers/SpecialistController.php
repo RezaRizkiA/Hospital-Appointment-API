@@ -2,10 +2,14 @@
 
 namespace App\Http\Controllers;
 
+use App\Http\Requests\SpecialistRequest;
 use App\Http\Resources\SpecialistResource;
+use App\Models\Specialist;
 use App\Services\SpecialistService;
 use Illuminate\Database\Eloquent\ModelNotFoundException;
 use Illuminate\Http\Request;
+
+use function Pest\Laravel\json;
 
 class SpecialistController extends Controller
 {
@@ -18,7 +22,7 @@ class SpecialistController extends Controller
 
     public function index()
     {
-        $fields = ['id', 'name', 'price', 'photo'];
+        $fields = ['id', 'name', 'photo', 'price'];
         $specialists = $this->specialistService->getAll($fields);
         return response()->json(SpecialistResource::collection($specialists));
     }
@@ -34,15 +38,33 @@ class SpecialistController extends Controller
         }
     }
 
-    public function store(Request $request)
+    public function store(SpecialistRequest $request)
     {
-        $data = $request->validate([
-            'name' => 'required|string|max:255',
-            'about' => 'nullable|string',
-            'price' => 'required|numeric',
-            'photo' => 'nullable|image|max:2048',
-        ]); 
-        $specialist = $this->specialistService->create($data);
+        $specialist = $this->specialistService->create($request->validated());
         return response()->json(new SpecialistResource($specialist), 201);
+    }
+
+    public function update(SpecialistRequest $request, int $id)
+    {
+        try {
+            $specialist = $this->specialistService->update($id, $request->validated());
+            return response()->json(new SpecialistResource($specialist));
+        } catch (ModelNotFoundException $e) {
+            return response()->json(['message' => 'Specialist not found'], 404);
+        }
+    }
+
+    public function destroy(int $id)
+    {
+        try {
+            $this->specialistService->delete($id);
+            return response()->json([
+                'message' => 'Specialist deleted successfully',
+            ]);
+        } catch (ModelNotFoundException $e) {
+            return response()->json([
+                'message' => 'Specialist not found'
+            ], 404);
+        }
     }
 }
