@@ -3,7 +3,6 @@
 namespace App\Repositories;
 
 use App\Models\Doctor;
-use App\Models\Hospital;
 
 class DoctorRepository
 {
@@ -14,17 +13,7 @@ class DoctorRepository
 
     public function getById(int $id, array $fields)
     {
-        return Doctor::select($fields)
-            ->with(
-                [
-                    'specialist' => function ($q) use ($id) {
-                        $q->where('specialist_id', $id);
-                    },
-                    'hospital' => function ($q) use ($id) {
-                        $q->where('hospital_id', $id);
-                    }
-                ]
-            )->findOrFail($id);
+        return Doctor::select($fields)->with('specialist', 'hospital')->findOrFail($id);
     }
 
     public function create(array $data)
@@ -34,14 +23,14 @@ class DoctorRepository
 
     public function update(int $id, array $data)
     {
-        $hospital = Hospital::findOrFail($id);
-        $hospital->update($data);
-        return $hospital;
+        $doctor = Doctor::findOrFail($id);
+        $doctor->update($data);
+        return $doctor;
     }
 
     public function delete(int $id)
     {
-        $hospital = Hospital::findOrFail($id);
-        $hospital->delete();
+        $doctor = Doctor::findOrFail($id);
+        $doctor->delete();
     }
 }
