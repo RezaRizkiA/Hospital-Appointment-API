@@ -34,6 +34,15 @@ class HospitalService
         return $this->hospitalRepository->create($data);
     }
 
+    public function update(int $id, array $data)
+    {
+        if (isset($data['photo']) && $data['photo'] instanceof UploadedFile) {
+            $this->deletePhoto($data['photo']);
+            $data['photo'] = $this->uploadPhoto($data['photo']);
+        }
+        return $this->hospitalRepository->update($id, $data);
+    }
+
     public function uploadPhoto(UploadedFile $photo): string
     {
         return $photo->store('hospitals', 'public');
