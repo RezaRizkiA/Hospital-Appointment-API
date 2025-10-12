@@ -4,12 +4,8 @@ namespace App\Http\Controllers;
 
 use App\Http\Requests\SpecialistRequest;
 use App\Http\Resources\SpecialistResource;
-use App\Models\Specialist;
 use App\Services\SpecialistService;
 use Illuminate\Database\Eloquent\ModelNotFoundException;
-use Illuminate\Http\Request;
-
-use function Pest\Laravel\json;
 
 class SpecialistController extends Controller
 {
