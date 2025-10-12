@@ -40,4 +40,14 @@ class HospitalController extends Controller
         $hospital = $this->hospitalService->create($request->validated());
         return response()->json(new HospitalResource($hospital), 201);
     }
+
+    public function update(HospitalRequest $request, int $id)
+    {
+        try {
+            $hospital = $this->hospitalService->update($id, $request->validated());
+            return response()->json(new HospitalResource($hospital));
+        } catch (ModelNotFoundException $e) {
+            return response()->json(['message' => 'Hospital not found'], 404);
+        }
+    }
 }
