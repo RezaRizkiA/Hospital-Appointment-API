@@ -21,8 +21,19 @@ class HospitalRequest extends FormRequest
      */
     public function rules(): array
     {
+        /** 
+         * @var \Illuminate\Http\Request 
+         * $this
+         * */
+        $id = $this->route('hospitals');
         return [
-            //
+            'name' => 'required|string|unique:hospitals,name' . $id,
+            'photo' => $this->isMethod('post') ? 'required|image|mimes:jpeg,png,jpg|max:2048' : 'sometimes|image|mimes:jpeg,png,jpg|max:2048',
+            'about' => 'required|string',
+            'address' => 'required|string',
+            'city' => 'required|string',
+            'post_code' => 'required|string',
+            'phone' => 'required|string',
         ];
     }
 }
