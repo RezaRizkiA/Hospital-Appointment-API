@@ -50,4 +50,14 @@ class HospitalController extends Controller
             return response()->json(['message' => 'Hospital not found'], 404);
         }
     }
+
+    public function destroy(int $id)
+    {
+        try {
+            $this->hospitalService->delete($id);
+            return response()->json(['message' => 'Hospital deleted successfully']);
+        } catch (ModelNotFoundException $e) {
+            return response()->json(['message' => 'Hospital not found'], 404);
+        }
+    }
 }
