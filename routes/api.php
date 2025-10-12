@@ -16,8 +16,8 @@ Route::apiResource('specialists', SpecialistController::class);
 Route::apiResource('hospitals', HospitalController::class);
 Route::apiResource('doctors', DoctorController::class);
 
-Route::post('hospitals/{hospital}/specialist', [HospitalSpecialistController::class, 'attach']);
-Route::delete('hospitals/{hospital}/specialist/{specialist}', [HospitalSpecialistController::class, 'detach']);
+Route::post('hospitals/{hospital}/specialists', [HospitalSpecialistController::class, 'attach']);
+Route::delete('hospitals/{hospital}/specialists/{specialist}', [HospitalSpecialistController::class, 'detach']);
 
 Route::apiResource('transactions', TransactionController::class);
 Route::patch('transactions/{transaction}/status', [TransactionController::class, 'updateStatus']);
