@@ -14,10 +14,7 @@ class HospitalRepository
      */
     public function getAll(array $fields)
     {
-        return Hospital::select($fields)
-            ->latest()
-            ->with(['doctors', 'specialists'])
-            ->paginate(10);
+        return Hospital::select($fields)->latest()->paginate(10);
     }
 
     /**
