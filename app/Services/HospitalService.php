@@ -36,8 +36,14 @@ class HospitalService
 
     public function update(int $id, array $data)
     {
+        $fields = ['photo'];
+        $hospital = $this->hospitalRepository->getById($id, $fields);
+        
         if (isset($data['photo']) && $data['photo'] instanceof UploadedFile) {
-            $this->deletePhoto($data['photo']);
+            if (!empty($hospital->photo)) {
+                // Delete the old photo if it exists
+                $this->deletePhoto($hospital->photo);
+            }
             $data['photo'] = $this->uploadPhoto($data['photo']);
         }
         return $this->hospitalRepository->update($id, $data);
