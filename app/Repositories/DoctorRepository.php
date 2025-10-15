@@ -9,7 +9,13 @@ class DoctorRepository
     public function getAll(array $fields)
     {
         return Doctor::select($fields)->latest()->with(['specialist', 'hospital'])->paginate(10);
-    } 
+    }
+
+    public function getById(int $id, array $fields)
+    {
+        return Doctor::select($fields)->with('specialist', 'hospital')->findOrFail($id);
+    }
+
     public function create(array $data)
     {
         return Doctor::create($data);
