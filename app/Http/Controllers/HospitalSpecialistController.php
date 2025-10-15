@@ -3,20 +3,20 @@
 namespace App\Http\Controllers;
 
 use App\Models\Hospital;
-use App\Services\HospitalSpecialistService;
+use App\Services\HospitalService;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Validator;
 
 class HospitalSpecialistController extends Controller
 {
-    private $hospitalSpecialistService;
+    private $hospitalService;
 
-    public function __construct(HospitalSpecialistService $hospitalSpecialistService)
+    public function __construct(HospitalService $hospitalService)
     {
-        $this->hospitalSpecialistService = $hospitalSpecialistService;
+        $this->hospitalService = $hospitalService;
     }
 
-    public function attach(Request $request, Hospital $hospital)
+    public function attach(Request $request, int $hospitalId)
     {
         $validator = Validator::make($request->all(), [
             'specialist_id' => 'required|exists:specialists,id',
@@ -26,9 +26,7 @@ class HospitalSpecialistController extends Controller
             return response()->json($validator->errors(), 422);
         }
 
-        $result = $this->hospitalSpecialistService->attachSpecialistToHospital($hospital, $request->input('specialist_id'));
-        return response()->json([
-            'message' => $result['message']
-        ], $result['code']);
+        $result = $this->hospitalService->attachSpecialist($hospitalId, $request->input('specialist_id'));
+        return response()->json(new HospitalSpecialistResource($result));
     }
 }

@@ -6,7 +6,6 @@ use App\Http\Requests\HospitalRequest;
 use App\Http\Resources\HospitalResource;
 use App\Services\HospitalService;
 use Illuminate\Database\Eloquent\ModelNotFoundException;
-use Illuminate\Http\Request;
 
 class HospitalController extends Controller
 {

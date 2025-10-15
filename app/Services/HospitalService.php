@@ -38,7 +38,7 @@ class HospitalService
     {
         $fields = ['photo'];
         $hospital = $this->hospitalRepository->getById($id, $fields);
-        
+
         if (isset($data['photo']) && $data['photo'] instanceof UploadedFile) {
             if (!empty($hospital->photo)) {
                 // Delete the old photo if it exists
@@ -57,6 +57,18 @@ class HospitalService
             $this->deletePhoto($hospital->photo);
         }
         return $this->hospitalRepository->delete($id);
+    }
+
+    public function attachSpecialist(int $hospitalId, int $specialistId)
+    {
+        $hospital = $this->hospitalRepository->getById($hospitalId, ['id']);
+        $hospital->specialists()->syncWithoutDetaching($specialistId);
+    }
+
+    public function detachSpecialist(int $hospitalId, int $specialistId)
+    {
+        $hospital = $this->hospitalRepository->getById($hospitalId, ['id']);
+        $hospital->specialists()->detach($specialistId);
     }
 
     public function uploadPhoto(UploadedFile $photo): string
