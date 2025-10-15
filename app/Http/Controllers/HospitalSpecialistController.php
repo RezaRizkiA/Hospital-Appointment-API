@@ -2,33 +2,42 @@
 
 namespace App\Http\Controllers;
 
+use App\Http\Requests\HospitalSpecialistRequest;
+use App\Http\Resources\HospitalSpecialistResource;
 use App\Models\Hospital;
-use App\Services\HospitalSpecialistService;
+use App\Services\HospitalService;
+use Illuminate\Database\Eloquent\ModelNotFoundException;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Validator;
 
 class HospitalSpecialistController extends Controller
 {
-    private $hospitalSpecialistService;
+    private $hospitalService;
 
-    public function __construct(HospitalSpecialistService $hospitalSpecialistService)
+    public function __construct(HospitalService $hospitalService)
     {
-        $this->hospitalSpecialistService = $hospitalSpecialistService;
+        $this->hospitalService = $hospitalService;
     }
 
-    public function attach(Request $request, Hospital $hospital)
+    public function attach(HospitalSpecialistRequest $request, int $hospitalId)
     {
-        $validator = Validator::make($request->all(), [
-            'specialist_id' => 'required|exists:specialists,id',
-        ]);
-
-        if ($validator->fails()) {
-            return response()->json($validator->errors(), 422);
+        try {
+            $validatedData = $request->validated();
+            $specialistId = $validatedData['specialist_id'];
+            $this->hospitalService->attachSpecialist($hospitalId, $specialistId);
+            return response()->json(['message' => 'Specialist attached successfully.']);
+        } catch (ModelNotFoundException $e) {
+            return response()->json(['message' => 'Hospital or Specialist not found.'], 404);
         }
+    }
 
-        $result = $this->hospitalSpecialistService->attachSpecialistToHospital($hospital, $request->input('specialist_id'));
-        return response()->json([
-            'message' => $result['message']
-        ], $result['code']);
+    public function detach(int $hospitalId, int $specialistId)
+    {
+        try {
+            $this->hospitalService->detachSpecialist($hospitalId, $specialistId);
+            return response()->json(['message' => 'Specialist detached successfully.']);
+        } catch (ModelNotFoundException $e) {
+            return response()->json(['message' => 'Hospital or Specialist not found.'], 404);
+        }
     }
 }

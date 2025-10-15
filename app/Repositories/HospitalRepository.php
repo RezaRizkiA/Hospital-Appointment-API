@@ -14,10 +14,7 @@ class HospitalRepository
      */
     public function getAll(array $fields)
     {
-        return Hospital::select($fields)
-            ->latest()
-            ->with(['doctors', 'specialists'])
-            ->paginate(10);
+        return Hospital::select($fields)->latest()->paginate(10);
     }
 
     /**
@@ -28,19 +25,7 @@ class HospitalRepository
      */
     public function getById(int $id, array $fields)
     {
-        return Hospital::select($fields)
-            ->with([
-                'doctors' => function ($q) use ($id) {
-                    $q->where('hospital_id', $id)
-                        ->with('specialist:id,name');
-                },
-                'specialists' => function ($q) use ($id) {
-                    $q->withCount(['doctors as doctors_count' => function ($q) use ($id) {
-                        $q->where('hospital_id', $id);
-                    }]);
-                }
-            ])
-            ->findOrFail($id);
+        return Hospital::select($fields)->with(['doctors.specialist', 'specialists'])->findOrFail($id);
     }
 
     /**
