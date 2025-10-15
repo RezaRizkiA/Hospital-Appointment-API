@@ -18,7 +18,7 @@ class DoctorController extends Controller
     }
 
     public function index(){
-        $fields = ['id', 'name', 'about'];
+        $fields = ['id', 'name', 'photo', 'yoe', 'specialist_id', 'hospital_id',];
         $doctor = $this->doctorService->getAll($fields);
         return response()->json(DoctorResource::collection($doctor));
     }
