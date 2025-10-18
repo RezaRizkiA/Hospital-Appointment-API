@@ -3,17 +3,23 @@
 namespace App\Services;
 
 use App\Repositories\DoctorRepository;
+use App\Repositories\HospitalSpecialistRepository;
 use Illuminate\Http\UploadedFile;
 use Illuminate\Support\Facades\Storage;
+use Illuminate\Validation\ValidationException;
 
 class DoctorService
 {
 
     private $doctorRepository;
+    private $hospitalSpecialistRepository;
 
-    public function __construct(DoctorRepository $doctorRepository)
-    {
+    public function __construct(
+        DoctorRepository $doctorRepository,
+        HospitalSpecialistRepository $hospitalSpecialistRepository
+    ) {
         $this->doctorRepository = $doctorRepository;
+        $this->hospitalSpecialistRepository = $hospitalSpecialistRepository;
     }
 
     public function getAll(array $fields)
@@ -28,6 +34,11 @@ class DoctorService
 
     public function create(array $data)
     {
+        if(!$this->hospitalSpecialistRepository->existsForHospitalAndSpecialist($data['hospital_id'],$data['specialist_id'])){
+            throw ValidationException::withMessages([
+                'specialist_id' => 'The selected specialist does not belong to the selected hospital.',
+            ]);
+        }
         if (isset($data['photo']) && $data['photo'] instanceof UploadedFile) {
             $data['photo'] = $this->uploadPhoto($data['photo']);
         }
@@ -36,6 +47,12 @@ class DoctorService
 
     public function update(int $id, array $data)
     {
+        if (!$this->hospitalSpecialistRepository->existsForHospitalAndSpecialist($data['hospital_id'], $data['specialist_id'])) {
+            throw ValidationException::withMessages([
+                'specialist_id' => 'The selected specialist does not belong to the selected hospital.',
+            ]);
+        }
+
         $fields = ['*'];
         $doctor = $this->doctorRepository->getById($id, $fields);
 
@@ -59,6 +76,11 @@ class DoctorService
         }
 
         return $this->doctorRepository->delete($id);
+    }
+
+    public function filterBySpecialistAndHospital(int $specialistId, int $hospitalId)
+    {
+        return $this->doctorRepository->filterBySpecialistAndHospital($specialistId, $hospitalId);
     }
 
     public function uploadPhoto(UploadedFile $photo): string
