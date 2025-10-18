@@ -33,7 +33,7 @@ class DoctorRequest extends FormRequest
             'yoe' => 'required|integer|min:1', // Years of experience
             'specialist_id' => 'required|exists:specialists,id',
             'hospital_id' => 'required|exists:hospitals,id',
-            'gender' => 'required|string|in:Male, Female',
+            'gender' => 'required|string|in:Male,Female',
         ];
     }
 }

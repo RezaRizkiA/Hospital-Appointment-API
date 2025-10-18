@@ -2,20 +2,15 @@
 
 namespace App\Repositories;
 
-use App\Models\Hospital;
+use App\Models\HospitalSpecialist;
 
 class HospitalSpecialistRepository
 {
 
-    /**
-     * Menautkan spesialis ke rumah sakit.
-     *
-     * @param Hospital $hospital
-     * @param int $specialistId
-     */
-    public function attachSpecialist(Hospital $hospital, int $specialistId)
+    public function existsForHospitalAndSpecialist(int $hospitalId, int $specialistId)
     {
-        $result = $hospital->specialists()->syncWithoutDetaching([$specialistId]);
-        return !empty($result['attached']);
+        return HospitalSpecialist::where('hospital_id', $hospitalId)
+            ->where('specialist_id', $specialistId)
+            ->exists();
     }
 }

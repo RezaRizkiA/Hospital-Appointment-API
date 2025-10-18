@@ -13,7 +13,7 @@ class DoctorRepository
 
     public function getById(int $id, array $fields)
     {
-        return Doctor::select($fields)->with('specialist', 'hospital')->findOrFail($id);
+        return Doctor::select($fields)->with('specialist', 'hospital', 'transactions.user')->findOrFail($id);
     }
 
     public function create(array $data)
@@ -32,5 +32,14 @@ class DoctorRepository
     {
         $doctor = Doctor::findOrFail($id);
         $doctor->delete();
+    }
+
+    public function filterBySpecialistAndHospital(int $specialistId, int $hospitalId)
+    {
+        return Doctor::with(['specialist', 'hospital'])
+            ->where('specialist_id', $specialistId)
+            ->where('hospital_id', $hospitalId)
+            // ->paginate(10)
+            ->get();
     }
 }
