@@ -2,4 +2,14 @@
 
 namespace App\Repositories;
 
-class TransactionRepository {}
+use App\Models\Transaction;
+
+class TransactionRepository 
+{
+    public function getAll()
+    {
+        return Transaction::with(['doctor', 'doctor.specialist', 'doctor.hospital', 'user'])
+            ->latest()
+            ->paginate(10);
+    }
+}
