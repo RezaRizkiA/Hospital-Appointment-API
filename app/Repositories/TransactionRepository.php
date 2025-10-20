@@ -12,4 +12,12 @@ class TransactionRepository
             ->latest()
             ->paginate(10);
     }
+
+    public function getAllForUser(int $userId)
+    {
+        return Transaction::where('user_id', $userId)
+            ->with(['doctor', 'doctor.specialist', 'doctor.hospital'])
+            ->latest()
+            ->paginate(10);
+    }
 }
