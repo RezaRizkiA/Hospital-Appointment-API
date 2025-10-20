@@ -104,10 +104,9 @@ class DoctorService
                     ->whereDate('started_at', $dateStr)
                     ->whereTime('time_at', $time)
                     ->exists();
-            }
-
-            if (!$isTaken) {
-                $availableSlots[$dateStr][] = $time;
+                if (!$isTaken) {
+                    $availableSlots[$dateStr][] = $time;
+                }
             }
         }
 
