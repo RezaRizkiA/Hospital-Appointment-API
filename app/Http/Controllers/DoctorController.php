@@ -81,4 +81,14 @@ class DoctorController extends Controller
         }
         return response()->json(DoctorResource::collection($doctors), 200);
     }
+
+    public function availableSlots(int $doctorId)
+    {
+        try {
+            $availableSlots = $this->doctorService->availableSlots($doctorId);
+            return response()->json($availableSlots, 200);
+        } catch (ModelNotFoundException $e) {
+            return response()->json(['message' => 'Doctor not found'], 404);
+        }
+    }
 }
