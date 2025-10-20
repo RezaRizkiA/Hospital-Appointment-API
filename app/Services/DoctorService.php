@@ -34,7 +34,7 @@ class DoctorService
 
     public function create(array $data)
     {
-        if(!$this->hospitalSpecialistRepository->existsForHospitalAndSpecialist($data['hospital_id'],$data['specialist_id'])){
+        if (!$this->hospitalSpecialistRepository->existsForHospitalAndSpecialist($data['hospital_id'], $data['specialist_id'])) {
             throw ValidationException::withMessages([
                 'specialist_id' => 'The selected specialist does not belong to the selected hospital.',
             ]);
@@ -81,6 +81,37 @@ class DoctorService
     public function filterBySpecialistAndHospital(int $specialistId, int $hospitalId)
     {
         return $this->doctorRepository->filterBySpecialistAndHospital($specialistId, $hospitalId);
+    }
+
+    public function availableSlots(int $doctorId)
+    {
+        $doctor = $this->doctorRepository->getById($doctorId, ['id']);
+        $dates = collect([
+            now()->addDays(1)->startOfDay(),
+            now()->addDays(2)->startOfDay(),
+            now()->addDays(3)->startOfDay(),
+        ]);
+
+        $timeSlots = ['10:30', '11:30', '13:30', '14:30', '15:30', '16:30'];
+        $availableSlots = [];
+
+        foreach ($dates as $date) {
+            $dateStr = $date->toDateString();
+            $availableSlots[$dateStr] = [];
+
+            foreach ($timeSlots as $time) {
+                $isTaken = $doctor->transactions()
+                    ->whereDate('started_at', $dateStr)
+                    ->whereTime('time_at', $time)
+                    ->exists();
+            }
+
+            if (!$isTaken) {
+                $availableSlots[$dateStr][] = $time;
+            }
+        }
+
+        return $availableSlots;
     }
 
     public function uploadPhoto(UploadedFile $photo): string
