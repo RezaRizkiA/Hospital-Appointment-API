@@ -103,7 +103,7 @@ class DoctorService
                 $isTaken = $doctor->transactions()
                     ->whereDate('started_at', $dateStr)
                     ->whereTime('time_at', $time)
-                    ->exists();
+                    ->exists(); // true if slot is taken
                 if (!$isTaken) {
                     $availableSlots[$dateStr][] = $time;
                 }
