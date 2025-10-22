@@ -56,7 +56,7 @@ class TransactionRepository
     }
 
     /**
-     * Update an existing transaction by ID.
+     * Update an existing transaction by ID
      */
     public function update(int $id, array $data)
     {
