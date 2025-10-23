@@ -26,6 +26,17 @@ class TransactionRepository
     }
 
     /**
+     * Update the status of a transaction by ID.
+     */
+    public function updateStatus(int $id, string $status)
+    {
+        $transaction = $this->getByIdForManager($id);
+        $transaction->update(['status' => $status]);
+        return $transaction;
+    }
+
+
+    /**
      * Get all transactions for a specific user with related doctor, specialist, and hospital data, paginated.
      */
     public function getAllForUser(int $userId)
@@ -56,12 +67,13 @@ class TransactionRepository
     }
 
     /**
-     * Update an existing transaction by ID
+     * Check if a time slot is already booked for a specific doctor on a given date and time.
      */
-    public function update(int $id, array $data)
+    public function isTimeSlotBooked(int $doctorId, string $date, string $time)
     {
-        $transaction = Transaction::findOrFail($id);
-        $transaction->update($data);
-        return $transaction;
+        return Transaction::where('doctor_id', $doctorId)
+            ->where('date', $date)
+            ->where('time', $time)
+            ->exists(); // true if slot is booked, false otherwise
     }
 }

@@ -3,6 +3,7 @@
 use App\Http\Controllers\DoctorController;
 use App\Http\Controllers\HospitalController;
 use App\Http\Controllers\HospitalSpecialistController;
+use App\Http\Controllers\MyOrderController;
 use App\Http\Controllers\SpecialistController;
 use App\Http\Controllers\TransactionController;
 use Illuminate\Http\Request;
@@ -24,3 +25,7 @@ Route::patch('transactions/{transaction}/status', [TransactionController::class,
     
 Route::get('/doctors-filter', [DoctorController::class, 'filterBySpecialistAndHospital']);
 Route::get('/doctors/{doctorId}/available-slots', [DoctorController::class, 'availableSlots']);
+
+Route::get('my-orders', [MyOrderController::class, 'index']);
+Route::post('my-orders', [MyOrderController::class, 'store']);
+Route::get('my-orders/{id}', [MyOrderController::class, 'show']);
