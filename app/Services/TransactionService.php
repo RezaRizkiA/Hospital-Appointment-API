@@ -5,6 +5,7 @@ namespace App\Services;
 use App\Repositories\DoctorRepository;
 use App\Repositories\TransactionRepository;
 use Illuminate\Http\UploadedFile;
+use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Storage;
 use Illuminate\Validation\ValidationException;
 
@@ -53,9 +54,7 @@ class TransactionService
 
     public function create(array $data)
     {
-        /** @var \Illuminate\Contracts\Auth\Guard|\Illuminate\Contracts\Auth\StatefulGuard $auth */
-        $auth = auth();
-        $data['user_id'] = $auth->id();
+        $data['user_id'] = Auth::id();
 
         if($this->transactionRepository->isTimeSlotBooked($data['doctor_id'], $data['date'], $data['time'])){
             throw ValidationException::withMessages([

@@ -5,20 +5,21 @@ namespace App\Http\Controllers;
 use App\Http\Resources\TransactionResource;
 use App\Services\TransactionService;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Auth;
 
-class TransactionController extends Controller
+class MyOrderController extends Controller
 {
     private $transactionService;
 
-    public function __construct(
-        TransactionService $transactionService
-    ) {
+    public function __construct(TransactionService $transactionService)
+    {
         $this->transactionService = $transactionService;
     }
 
     public function index()
     {
-        $transaction = $this->transactionService->getAll();
+        $userId = Auth::id();
+        $transaction = $this->transactionService->getAllForUser($userId);
         return response()->json(TransactionResource::collection($transaction));
     }
 }
