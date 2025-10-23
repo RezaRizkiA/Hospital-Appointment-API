@@ -74,6 +74,6 @@ class TransactionRepository
         return Transaction::where('doctor_id', $doctorId)
             ->where('date', $date)
             ->where('time', $time)
-            ->exists();
+            ->exists(); // true if slot is booked, false otherwise
     }
 }

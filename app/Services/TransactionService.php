@@ -2,6 +2,7 @@
 
 namespace App\Services;
 
+use App\Repositories\DoctorRepository;
 use App\Repositories\TransactionRepository;
 use Illuminate\Http\UploadedFile;
 use Illuminate\Support\Facades\Storage;
@@ -10,10 +11,12 @@ use Illuminate\Validation\ValidationException;
 class TransactionService
 {
     private $transactionRepository;
+    private $doctorRepository;
 
-    public function __construct(TransactionRepository $transactionRepository)
+    public function __construct(TransactionRepository $transactionRepository, DoctorRepository $doctorRepository)
     {
         $this->transactionRepository = $transactionRepository;
+        $this->doctorRepository = $doctorRepository;
     }
 
     // manager services
@@ -29,6 +32,11 @@ class TransactionService
 
     public function updateStatus(int $id, string $status)
     {
+        if(!in_array($status, ['Approved', 'Rejected'])){
+            throw ValidationException::withMessages([
+                'status' => ['Invalid status value.']
+            ]);
+        }
         return $this->transactionRepository->updateStatus($id, $status);
     }
 
@@ -55,20 +63,23 @@ class TransactionService
             ]);
         }
 
+        $doctor = $this->doctorRepository->getById($data['doctor_id'], ['*']);
+        $price = $doctor->specialist->price;
+        $tax = (int) round($price * 0.11);
+        $grand = $price + $tax;
 
-        return $this->transactionRepository->create($data);
-    }
+        $data['sub_total'] = $price;
+        $data['tax_total'] = $tax;
+        $data['grand_total'] = $grand;
+        $data['status'] = 'Pending';
 
-    public function uploadPhoto(UploadedFile $photo): string
-    {
-        return $photo->store('doctors', 'public');
-    }
-
-    public function deletePhoto(string $photoPath)
-    {
-        $relativePath = 'doctors/' . basename($photoPath);
-        if (Storage::disk('public')->exists($relativePath)) {
-            Storage::disk('public')->delete($relativePath);
+        if(isset($data['proof_payment']) && $data['proof_payment'] instanceof UploadedFile){
+            $data['proof_payment'] = $this->uploadProof($data['proof_payment']);
         }
+    }
+
+    public function uploadProof(UploadedFile $photo): string
+    {
+        return $photo->store('proofs', 'public');
     }
 }
