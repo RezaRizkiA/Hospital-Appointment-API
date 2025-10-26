@@ -56,7 +56,7 @@ class TransactionService
     {
         $data['user_id'] = Auth::id();
 
-        if($this->transactionRepository->isTimeSlotBooked($data['doctor_id'], $data['date'], $data['time'])){
+        if($this->transactionRepository->isTimeSlotBooked($data['doctor_id'], $data['started_at'], $data['time_at'])){
             throw ValidationException::withMessages([
                 'time_at' => ['Waktu yang dipilih sudah terbooking.']
             ]);
@@ -70,11 +70,13 @@ class TransactionService
         $data['sub_total'] = $price;
         $data['tax_total'] = $tax;
         $data['grand_total'] = $grand;
-        $data['status'] = 'Pending';
+        $data['status'] = 'Waiting';
 
         if(isset($data['proof_payment']) && $data['proof_payment'] instanceof UploadedFile){
             $data['proof_payment'] = $this->uploadProof($data['proof_payment']);
         }
+
+        return $this->transactionRepository->create($data);
     }
 
     public function uploadProof(UploadedFile $photo): string

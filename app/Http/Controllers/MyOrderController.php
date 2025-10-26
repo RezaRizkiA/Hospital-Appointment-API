@@ -20,6 +20,7 @@ class MyOrderController extends Controller
     {
         $userId = Auth::id();
         $transaction = $this->transactionService->getAllForUser($userId);
-        return response()->json(TransactionResource::collection($transaction));
+        // return response()->json(TransactionResource::collection($transaction));
+        return TransactionResource::collection($transaction);
     }
 }
