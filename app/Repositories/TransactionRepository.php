@@ -72,7 +72,7 @@ class TransactionRepository
     public function isTimeSlotBooked(int $doctorId, string $date, string $time)
     {
         return Transaction::where('doctor_id', $doctorId)
-            ->whereData('started_at', $date)
+            ->whereDate('started_at', $date)
             ->whereTime('time_at', $time)
             ->exists(); // true if slot is booked, false otherwise
     }

@@ -2,7 +2,9 @@
 
 namespace App\Http\Requests;
 
+use Carbon\Carbon;
 use Illuminate\Foundation\Http\FormRequest;
+use Illuminate\Validation\Rule;
 
 class TransactionRequest extends FormRequest
 {
@@ -22,10 +24,18 @@ class TransactionRequest extends FormRequest
     public function rules(): array
     {
         return [
-            'user_id' => 'required|exists:users,id',
-            'doctor_id' => 'required|exists:doctors,id',
-            'status' => 'required|string',
-            'started_at' => 'required|date',
+            'doctor_id' => ['required', 'exists:doctors,id'],
+            'started_at' => ['required', 'date', function ($attribute, $value, $fail) {
+                $date = Carbon::parse($value)->startOfDay();
+                $min = now()->addDays()->startOfDay();
+                $max = now()->addDays(3)->endOfDay();
+                if ($date->lt($min) || $date->gt($max)) {
+                    $fail('Tanggal konsultasi hanya boleh dipilih antara H+1 hingga H+3 dari hari ini.');
+                }
+            }],
+            'time_at' => ['required', 'date_format:H:i',
+                Rule::in(['10:30', '11:30', '13:30', '14:30', '15:30', '16:30'])],
+            'proof_payment' => ['required', 'image', 'mimes:jpeg,png,jpg', 'max:2048'],
         ];
     }
 }

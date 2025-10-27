@@ -6,7 +6,6 @@ use App\Repositories\DoctorRepository;
 use App\Repositories\TransactionRepository;
 use Illuminate\Http\UploadedFile;
 use Illuminate\Support\Facades\Auth;
-use Illuminate\Support\Facades\Storage;
 use Illuminate\Validation\ValidationException;
 
 class TransactionService
@@ -67,10 +66,10 @@ class TransactionService
         $tax = (int) round($price * 0.11);
         $grand = $price + $tax;
 
+        $data['status'] = 'Waiting';
         $data['sub_total'] = $price;
         $data['tax_total'] = $tax;
         $data['grand_total'] = $grand;
-        $data['status'] = 'Waiting';
 
         if(isset($data['proof_payment']) && $data['proof_payment'] instanceof UploadedFile){
             $data['proof_payment'] = $this->uploadProof($data['proof_payment']);
