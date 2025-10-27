@@ -60,6 +60,30 @@ class TransactionService
         ]);
     }
 
+    public function tokenLogin(array $data)
+    {
+        $credentials = [
+            'email' => $data['email'],
+            'password' => $data['password'],
+        ];
+
+        // coba login via repository
+        if (!$this->authRepository->attemptLogin($credentials)) {
+            return response()->json([
+                'message' => 'Invalid credentials'
+            ], 401);
+        }
+
+        $user = $this->authRepository->getAuthenticatedUser();
+        $token = $user->createToken('API Token')->plainTextToken;
+
+        return response()->json([
+            'message' => 'Login successful',
+            'token' => $token,
+            'user' => new UserResource($user->load('roles'))
+        ]);
+    }
+
     private function uploadPhoto(UploadedFile $photo): string
     {
         return $photo->store('users', 'public');
