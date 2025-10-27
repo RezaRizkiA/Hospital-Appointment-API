@@ -2,10 +2,8 @@
 
 namespace App\Repositories;
 
-use App\Http\Resources\UserResource;
 use App\Models\User;
 use Illuminate\Support\Facades\Auth;
-use Illuminate\Support\Facades\Hash;
 
 class AuthRepository
 {
@@ -16,5 +14,15 @@ class AuthRepository
         } catch (\Throwable $e) {
             throw new \RuntimeException('Failed to create user' . $e->getMessage());
         }
+    }
+
+    public function attemptLogin(array $credentials): bool
+    {
+        return Auth::attempt($credentials);
+    }
+
+    public function getAuthenticatedUser()
+    {
+        return Auth::user();
     }
 }
