@@ -25,6 +25,7 @@ class TransactionService
         if (isset($data['photo']) && $data['photo'] instanceof UploadedFile) {
             $data['photo'] = $this->uploadPhoto($data['photo']);
         }
+        
         // simpan user ke DB via repository
         $user = $this->authRepository->createUser($data);
 

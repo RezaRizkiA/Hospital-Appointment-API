@@ -20,7 +20,7 @@ class TransactionController extends Controller
     public function index()
     {
         $transactions = $this->transactionService->getAll();
-        // return response()->json(TransactionResource::collection($transactions));
+        
         return TransactionResource::collection($transactions);
     }
 
@@ -55,11 +55,4 @@ class TransactionController extends Controller
             ], 404);
         }
     }
-
-    // public function store(TransactionRequest $request)
-    // {
-    //     $data = $request->validated();
-    //     $transaction = $this->transactionService->create($data);
-    //     return response()->json(new TransactionResource($transaction), 201);
-    // }
 }
