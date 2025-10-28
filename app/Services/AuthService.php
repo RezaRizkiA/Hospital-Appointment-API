@@ -5,9 +5,10 @@ namespace App\Services;
 use App\Http\Resources\UserResource;
 use App\Repositories\AuthRepository;
 use Illuminate\Http\UploadedFile;
+use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Hash;
 
-class TransactionService
+class AuthService
 {
     private $authRepository;
 
@@ -25,13 +26,15 @@ class TransactionService
         if (isset($data['photo']) && $data['photo'] instanceof UploadedFile) {
             $data['photo'] = $this->uploadPhoto($data['photo']);
         }
-        
-        // simpan user ke DB via repository
-        $user = $this->authRepository->createUser($data);
 
-        // assign role default
-        $user->assignRole('customer');
-        return $user->load('roles');
+        return DB::transaction(function () use ($data) {
+            // simpan user ke DB via repository
+            $user = $this->authRepository->createUser($data);
+
+            // assign role default
+            $user->assignRole('customer');
+            return $user->load('roles');
+        });
     }
 
     public function login(array $data)
