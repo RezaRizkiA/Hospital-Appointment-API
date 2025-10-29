@@ -23,19 +23,36 @@ Route::middleware('auth:sanctum')->group(function(){
     Route::get('user', [AuthController::class, 'user']);
 });
 
-Route::apiResource('specialists', SpecialistController::class);
-Route::apiResource('hospitals', HospitalController::class);
-Route::apiResource('doctors', DoctorController::class);
-
-Route::post('hospitals/{hospital}/specialists', [HospitalSpecialistController::class, 'attach']);
-Route::delete('hospitals/{hospital}/specialists/{specialist}', [HospitalSpecialistController::class, 'detach']);
-
-Route::apiResource('transactions', TransactionController::class);
-Route::patch('transactions/{transaction}/status', [TransactionController::class, 'updateStatus']);
+Route::middleware('auth:sanctum', 'role:manager')->group(function(){
+    Route::apiResource('specialists', SpecialistController::class);
+    Route::apiResource('hospitals', HospitalController::class);
+    Route::apiResource('doctors', DoctorController::class);
     
-Route::get('/doctors-filter', [DoctorController::class, 'filterBySpecialistAndHospital']);
-Route::get('/doctors/{doctorId}/available-slots', [DoctorController::class, 'availableSlots']);
+    Route::post('hospitals/{hospital}/specialists', [HospitalSpecialistController::class, 'attach']);
+    Route::delete('hospitals/{hospital}/specialists/{specialist}', [HospitalSpecialistController::class, 'detach']);
+    
+    Route::apiResource('transactions', TransactionController::class);
+    Route::patch('transactions/{transaction}/status', [TransactionController::class, 'updateStatus']);
+});
 
-Route::get('my-orders', [MyOrderController::class, 'index']);
-Route::post('my-orders', [MyOrderController::class, 'store']);
-Route::get('my-orders/{id}', [MyOrderController::class, 'show']);
+Route::middleware('auth:sanctum', 'role:customer|manager')->group(function(){
+    Route::get('hospitals', [HospitalController::class, 'index']);
+    Route::get('hospitals/{hospital}', [HospitalController::class, 'show']);
+    
+    Route::get('specialists', [SpecialistController::class, 'index']);
+    Route::get('specialists/{specialist}', [SpecialistController::class, 'show']);
+    
+    Route::get('doctors', [DoctorController::class, 'index']);
+    Route::get('doctors/{doctor}', [DoctorController::class, 'show']);
+});
+
+Route::middleware('auth:sanctum', 'role:customer')->group(function(){
+    Route::get('/doctors-filter', [DoctorController::class, 'filterBySpecialistAndHospital']);
+    Route::get('/doctors/{doctorId}/available-slots', [DoctorController::class, 'availableSlots']);
+    
+    Route::get('my-orders', [MyOrderController::class, 'index']);
+    Route::post('my-orders', [MyOrderController::class, 'store']);
+    Route::get('my-orders/{id}', [MyOrderController::class, 'show']);
+});
+
+    
