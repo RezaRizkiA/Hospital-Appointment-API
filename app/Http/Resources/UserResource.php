@@ -22,6 +22,7 @@ class UserResource extends JsonResource
             'photo' => $this->photo,
             'phone' => $this->phone,
             'roles' => $this->roles->pluck('name'),
+            'gender' => $this->gender,
         ];
     }
 }
