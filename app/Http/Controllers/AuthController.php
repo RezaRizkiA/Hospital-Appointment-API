@@ -25,7 +25,7 @@ class AuthController extends Controller
 
         return response()->json([
             'message' => 'User Registered Successfully',
-            'user' => new UserResource($user)
+            'user' => $user,
         ], 201);
     }
 
@@ -49,6 +49,14 @@ class AuthController extends Controller
 
         return response()->json([
             'message' => 'Logged out successfully'
+        ]);
+    }
+
+    public function user(Request $request)
+    {
+        // return new UserResource($request->user());
+        return response()->json([
+            'user' => new UserResource($request->user())
         ]);
     }
 }
