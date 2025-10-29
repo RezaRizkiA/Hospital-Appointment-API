@@ -21,7 +21,7 @@ class AuthRepository
         return Auth::attempt($credentials);
     }
 
-    public function getAuthenticatedUser()
+    public function getAuthenticatedUser(): ?User
     {
         return Auth::user();
     }
