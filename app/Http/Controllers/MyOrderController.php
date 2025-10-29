@@ -8,7 +8,6 @@ use App\Services\TransactionService;
 use Illuminate\Database\Eloquent\MassAssignmentException;
 use Illuminate\Database\Eloquent\ModelNotFoundException;
 use Illuminate\Support\Facades\Auth;
-use Illuminate\Support\Facades\Log;
 
 class MyOrderController extends Controller
 {
@@ -46,6 +45,7 @@ class MyOrderController extends Controller
         
         try {
             $transaction = $this->transactionService->create($validated);
+            $transaction = $this->transactionService->getByIdForUser($transaction->id, Auth::id());
             return response()->json(new TransactionResource($transaction), 201);
         } catch (MassAssignmentException $e) {
             return response()->json([
